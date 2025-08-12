@@ -1,0 +1,22 @@
+cmake_minimum_required(VERSION 3.8)
+project(physics_Engine)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Output bin folder
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+
+# For CLion / VSCode
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+ 
+# Tell CMake to use vcpkg toolchain if not already set
+if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    if(DEFINED ENV{VCPKG_ROOT}) 
+        set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+            CACHE STRING "Vcpkg toolchain file")
+    endif()
+endif()
+
+# Add subdirectories
+add_subdirectory(src)

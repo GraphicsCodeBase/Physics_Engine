@@ -1,0 +1,34 @@
+# Physics engine library (no main.cpp here!)
+add_library(physics_engine
+    physics.cpp
+    headers/physics.hpp
+    # add other source files here
+)
+
+# External dependencies
+find_package(glm CONFIG REQUIRED)
+find_package(glad CONFIG REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
+
+target_link_libraries(physics_engine
+    PUBLIC
+        glm::glm
+        glad::glad
+        glfw
+        fmt::fmt
+)
+
+target_include_directories(physics_engine
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+# Executable that uses the engine
+add_executable(physics_Engine
+    main.cpp   # This is the *only* file with int main()
+)
+
+target_link_libraries(physics_Engine
+    PRIVATE physics_engine
+)
