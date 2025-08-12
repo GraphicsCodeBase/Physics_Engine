@@ -2,6 +2,10 @@
 add_library(physics_engine
     physics.cpp
     headers/physics.hpp
+    headers/Shapes.hpp
+    headers/Mesh.hpp
+    "Shapes.cpp"
+    "Mesh.cpp"
     # add other source files here
 )
 
@@ -27,7 +31,7 @@ target_include_directories(physics_engine
 # Executable that uses the engine
 add_executable(physics_Engine
     main.cpp   # This is the *only* file with int main()
-)
+ "Shapes.cpp")
 
 target_link_libraries(physics_Engine
     PRIVATE physics_engine
