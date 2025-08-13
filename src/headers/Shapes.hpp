@@ -9,7 +9,6 @@ public:
 		CUBE,
 		BALL,
 		PYRAMID
-	
 	};
 	//constructor
 	Shapes(shapeType type, glm::vec3 pos = { 0,0,0 }, glm::vec3 scl = { 1,1,1 }, float rot = 0.0f, glm::vec4 col = { 1,1,1,1 });
