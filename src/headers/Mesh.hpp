@@ -22,7 +22,7 @@ class Mesh
 		void destroy();
 
 		// Shape generators
-		static Mesh createCube();
-		static Mesh createPyramid();
+		static std::unique_ptr<Mesh> createCube();
+		static std::shared_ptr<Mesh> createPyramid();
 	private:
 };

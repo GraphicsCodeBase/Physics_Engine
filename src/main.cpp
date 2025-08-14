@@ -1,8 +1,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 #include <iostream>
 #include "headers/Shader.hpp" 
-
+#include "headers/Shapes.hpp"
+#include "headers/Camera.hpp"
 //shader path globals
 std::string shader_VS = "../src/Shaders/main.vert";
 std::string shader_FS = "../src/Shaders/main.frag";
@@ -55,6 +57,16 @@ int main()
     Shader mainShader;
     mainShader.setUpShader(shader_VS,shader_FS);
 
+    //object creation
+    Shapes object_1(
+        Shapes::shapeType::CUBE,            // type
+        glm::vec3(0.0f, 0.0f, 0.0f),        // position
+        glm::vec3(1.0f, 1.0f, 1.0f),        // scale
+        0.0f,                               // rotation in degrees
+        glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)); // color RGBA
+
+    //initalise camera object.
+    camera main_camera;
     // Main loop
     while (!glfwWindowShouldClose(window))
     {

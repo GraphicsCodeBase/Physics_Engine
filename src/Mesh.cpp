@@ -46,12 +46,12 @@ void Mesh::destroy()
     }
 }
 
-Mesh Mesh::createCube()
+std::unique_ptr<Mesh> Mesh::createCube()
 {
-   //make a Mesh
-    Mesh tempMesh;
-    //create vertices
-    tempMesh.vertices = {
+    auto tempMesh = std::make_unique<Mesh>();
+
+    // Create vertices
+    tempMesh->vertices = {
         // Front
         {-0.5f, -0.5f,  0.5f},
         { 0.5f, -0.5f,  0.5f},
@@ -63,8 +63,9 @@ Mesh Mesh::createCube()
         { 0.5f,  0.5f, -0.5f},
         {-0.5f,  0.5f, -0.5f}
     };
-    //create indices.
-    tempMesh.indices = {
+
+    // Create indices
+    tempMesh->indices = {
         // Front
         0, 1, 2, 2, 3, 0,
         // Right
@@ -78,23 +79,28 @@ Mesh Mesh::createCube()
         // Bottom
         4, 5, 1, 1, 0, 4
     };
-    tempMesh.uploadToGPU();
-    return tempMesh;
+
+    tempMesh->uploadToGPU();
+
+    return tempMesh; // returns unique_ptr<Mesh>
 }
 
-Mesh Mesh::createPyramid()
+
+std::shared_ptr<Mesh> Mesh::createPyramid()
 {
-    Mesh m;
-    //create vertices
-    m.vertices = {
+    auto m = std::make_shared<Mesh>();
+
+    // Create vertices
+    m->vertices = {
         { 0.0f,  0.5f,  0.0f},  // top
         {-0.5f, -0.5f,  0.5f},  // front-left
         { 0.5f, -0.5f,  0.5f},  // front-right
         { 0.5f, -0.5f, -0.5f},  // back-right
         {-0.5f, -0.5f, -0.5f}   // back-left
     };
-    //create indices.
-    m.indices = {
+
+    // Create indices
+    m->indices = {
         0, 1, 2,  // front face
         0, 2, 3,  // right face
         0, 3, 4,  // back face
@@ -103,6 +109,7 @@ Mesh Mesh::createPyramid()
         1, 3, 2
     };
 
-    m.uploadToGPU();
+    m->uploadToGPU();
     return m;
 }
+
