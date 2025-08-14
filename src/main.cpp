@@ -1,6 +1,11 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include "headers/Shader.hpp" 
+
+//shader path globals
+std::string shader_VS = "../src/Shaders/main.vert";
+std::string shader_FS = "../src/Shaders/main.frag";
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -46,6 +51,10 @@ int main()
     glViewport(0, 0, 800, 600);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+    //setup Shaders
+    Shader mainShader;
+    mainShader.setUpShader(shader_VS,shader_FS);
+
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
@@ -57,6 +66,12 @@ int main()
         glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        //bind Shader
+        mainShader.use();
+        //pass in uniforms.
+
+        //unbind shaders.
+        mainShader.unUse();
         // Swap buffers + poll events
         glfwSwapBuffers(window);
         glfwPollEvents();
