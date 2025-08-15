@@ -33,7 +33,7 @@ int main()
 #endif
 
     // Create window
-    GLFWwindow* window = glfwCreateWindow(800, 600, "OpenGL Test Window", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Physics Engine", nullptr, nullptr);
     if (!window)
     {
         std::cerr << "Failed to create GLFW window\n";
@@ -64,7 +64,11 @@ int main()
         glm::vec3(1.0f, 1.0f, 1.0f),        // scale
         0.0f,                               // rotation in degrees
         glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)); // color RGBA
-
+    Shapes object_2(Shapes::shapeType::PYRAMID,            // type
+                    glm::vec3(3.0f, 0.0f, 0.0f),        // position
+                    glm::vec3(1.0f, 1.0f, 1.0f),        // scale
+                    0.0f,                               // rotation in degrees
+                    glm::vec4(1.0f, 0.0f, 1.0f, 1.0f)); // color RGBA
     //initialize camera object.
     camera main_camera;
     //get window params.
@@ -95,8 +99,10 @@ int main()
         //bind Shader
         mainShader.use();
         object_1.update(dt);
+        object_2.update(dt);
         //pass in uniforms.
         object_1.render(mainShader, main_camera.getViewProj());
+        object_2.render(mainShader, main_camera.getViewProj());
         //unbind shaders.
         mainShader.unUse();
         // Swap buffers + poll events
