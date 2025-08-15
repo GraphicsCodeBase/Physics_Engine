@@ -1,6 +1,14 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <vector>
+
+//defining a struct for the mesh
+struct Vertex
+{
+	glm::vec3 position;
+	glm::vec3 normal;
+};
+
 class Mesh
 {
 	public:
