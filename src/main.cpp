@@ -65,8 +65,16 @@ int main()
         0.0f,                               // rotation in degrees
         glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)); // color RGBA
 
-    //initalise camera object.
+    //initialize camera object.
     camera main_camera;
+    //get window params.
+    // Get actual framebuffer size
+    int windowWidth, windowHeight;
+    glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
+    // Set OpenGL viewport
+    glViewport(0, 0, windowWidth, windowHeight);
+
+    float lastFrame = 0.0f;//initalise last frame time.
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
@@ -74,14 +82,21 @@ int main()
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(window, true);
 
+        //calculate delta time
+        float currentFrame = static_cast<float>(glfwGetTime());
+        float dt = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
         // Render (clear to teal color)
         glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-
+        //update camera.
+        main_camera.update(dt, window, windowWidth, windowHeight);
         //bind Shader
         mainShader.use();
+        object_1.update(dt);
         //pass in uniforms.
-
+        object_1.render(mainShader, main_camera.getViewProj());
         //unbind shaders.
         mainShader.unUse();
         // Swap buffers + poll events

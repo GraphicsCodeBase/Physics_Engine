@@ -1,5 +1,7 @@
+#pragma once
 #include <glm/glm.hpp>
 #include "headers/Mesh.hpp"
+#include "headers/Shader.hpp"
 using namespace glm;
 
 class Shapes
@@ -12,9 +14,11 @@ public:
 		PYRAMID
 	};
 	//constructor
-	Shapes(shapeType type, glm::vec3 pos = { 0.0f,0.0f,0.0f }, glm::vec3 scl = { 1.0f,1.0f,1.0f }, float rot = 0.0f, glm::vec4 col = { 1,1,1,1 });
+	Shapes(shapeType type, glm::vec3 pos = { 0.0f,0.0f,0.0f }, glm::vec3 scl = { 1.0f,1.0f,1.0f }
+		  , float rot = 0.0f, glm::vec4 col = { 1,1,1,1 });
 	~Shapes();//destructor
-	void update(float dt);
+	void update(float dt); //dt = delta time.
+	void render(const Shader& shader, glm::mat4 camMatrix);
 	//void initalise_shape();
 	void set_color(vec4 color);
 

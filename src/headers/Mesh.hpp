@@ -21,8 +21,11 @@ class Mesh
 		// Delete from GPU
 		void destroy();
 
+		//draw mesh
+		void draw() const;
+
 		// Shape generators
 		static std::unique_ptr<Mesh> createCube();
-		static std::shared_ptr<Mesh> createPyramid();
+		static std::unique_ptr<Mesh> createPyramid();
 	private:
 };

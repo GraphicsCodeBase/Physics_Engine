@@ -46,6 +46,16 @@ void Mesh::destroy()
     }
 }
 
+void Mesh::draw() const
+{
+    //bind vao
+    glBindVertexArray(vao);
+    // Draw the mesh using indices
+    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, 0);
+    // Unbind the VAO (optional, but good practice)
+    glBindVertexArray(0);
+}
+
 std::unique_ptr<Mesh> Mesh::createCube()
 {
     auto tempMesh = std::make_unique<Mesh>();
@@ -86,9 +96,9 @@ std::unique_ptr<Mesh> Mesh::createCube()
 }
 
 
-std::shared_ptr<Mesh> Mesh::createPyramid()
+std::unique_ptr<Mesh> Mesh::createPyramid()
 {
-    auto m = std::make_shared<Mesh>();
+    auto m = std::make_unique<Mesh>();
 
     // Create vertices
     m->vertices = {

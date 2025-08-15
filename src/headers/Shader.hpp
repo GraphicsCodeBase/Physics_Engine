@@ -1,3 +1,4 @@
+#pragma once
 #include <glad/glad.h>  // OpenGL
 #include <GLFW/glfw3.h> // Window creation
 #include <glm/glm.hpp>
