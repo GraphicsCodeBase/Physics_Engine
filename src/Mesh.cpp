@@ -16,7 +16,7 @@ void Mesh::uploadToGPU()
     // Vertex buffer
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 
     // Index buffer
     glGenBuffers(1, &ibo);
@@ -25,7 +25,11 @@ void Mesh::uploadToGPU()
 
     // Vertex layout (position only for now)
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+
+    // Vertex normals
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
 
     glBindVertexArray(0);
 }
@@ -62,16 +66,17 @@ std::unique_ptr<Mesh> Mesh::createCube()
 
     // Create vertices
     tempMesh->vertices = {
-        // Front
-        {-0.5f, -0.5f,  0.5f},
-        { 0.5f, -0.5f,  0.5f},
-        { 0.5f,  0.5f,  0.5f},
-        {-0.5f,  0.5f,  0.5f},
-        // Back
-        {-0.5f, -0.5f, -0.5f},
-        { 0.5f, -0.5f, -0.5f},
-        { 0.5f,  0.5f, -0.5f},
-        {-0.5f,  0.5f, -0.5f}
+        // Front face (+Z)
+        {{-0.5f, -0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}},
+        {{ 0.5f, -0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}},
+        {{ 0.5f,  0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}},
+        {{-0.5f,  0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}},
+
+        // Back face (-Z)
+        {{-0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}},
+        {{ 0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}},
+        {{ 0.5f,  0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}},
+        {{-0.5f,  0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}}        
     };
 
     // Create indices
@@ -101,12 +106,33 @@ std::unique_ptr<Mesh> Mesh::createPyramid()
     auto m = std::make_unique<Mesh>();
 
     // Create vertices
+   // Vertices with normals (per-face)
     m->vertices = {
-        { 0.0f,  0.5f,  0.0f},  // top
-        {-0.5f, -0.5f,  0.5f},  // front-left
-        { 0.5f, -0.5f,  0.5f},  // front-right
-        { 0.5f, -0.5f, -0.5f},  // back-right
-        {-0.5f, -0.5f, -0.5f}   // back-left
+        // Front face
+        {{ 0.0f,  0.5f,  0.0f}, { 0.0f,  0.707f,  0.707f}}, // top
+        {{-0.5f, -0.5f,  0.5f}, { 0.0f,  0.707f,  0.707f}}, // front-left
+        {{ 0.5f, -0.5f,  0.5f}, { 0.0f,  0.707f,  0.707f}}, // front-right
+
+        // Right face
+        {{ 0.0f,  0.5f,  0.0f}, { 0.707f,  0.707f,  0.0f}}, // top
+        {{ 0.5f, -0.5f,  0.5f}, { 0.707f,  0.707f,  0.0f}}, // front-right
+        {{ 0.5f, -0.5f, -0.5f}, { 0.707f,  0.707f,  0.0f}}, // back-right
+
+        // Back face
+        {{ 0.0f,  0.5f,  0.0f}, { 0.0f,  0.707f, -0.707f}}, // top
+        {{ 0.5f, -0.5f, -0.5f}, { 0.0f,  0.707f, -0.707f}}, // back-right
+        {{-0.5f, -0.5f, -0.5f}, { 0.0f,  0.707f, -0.707f}}, // back-left
+
+        // Left face
+        {{ 0.0f,  0.5f,  0.0f}, {-0.707f,  0.707f,  0.0f}}, // top
+        {{-0.5f, -0.5f, -0.5f}, {-0.707f,  0.707f,  0.0f}}, // back-left
+        {{-0.5f, -0.5f,  0.5f}, {-0.707f,  0.707f,  0.0f}}, // front-left
+
+        // Base face (optional: flat horizontal normal)
+        {{-0.5f, -0.5f,  0.5f}, {0.0f, -1.0f, 0.0f}}, // front-left
+        {{ 0.5f, -0.5f,  0.5f}, {0.0f, -1.0f, 0.0f}}, // front-right
+        {{ 0.5f, -0.5f, -0.5f}, {0.0f, -1.0f, 0.0f}}, // back-right
+        {{-0.5f, -0.5f, -0.5f}, {0.0f, -1.0f, 0.0f}}, // back-left
     };
 
     // Create indices

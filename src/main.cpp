@@ -101,6 +101,10 @@ int main()
         object_1.update(dt);
         object_2.update(dt);
         //pass in uniforms.
+        //passing in global shaders.
+        mainShader.setVec3("lightDir",glm::vec3(-1.0f, -1.0f, -1.0f));
+        mainShader.setVec3("lightColor", glm::vec3(1.0f));
+
         object_1.render(mainShader, main_camera.getViewProj());
         object_2.render(mainShader, main_camera.getViewProj());
         //unbind shaders.

@@ -17,7 +17,7 @@ class Mesh
 		unsigned int ibo = 0;
 
 		// Raw geometry data
-		std::vector<glm::vec3> vertices;
+		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
 		
 		Mesh() = default;

@@ -52,7 +52,7 @@ void Shapes::render(const Shader& shader, glm::mat4 camMatrix)
     model = glm::translate(model, position);
     model = glm::rotate(model, glm::radians(rotation), glm::vec3(0, 1, 0));
     model = glm::scale(model, scale);
-    //for testing purporses
+    //for testing purposes
     shader.use();
     //set uniforms.
     shader.setMat4("uniform_m2w",model);
