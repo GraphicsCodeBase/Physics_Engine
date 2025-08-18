@@ -137,12 +137,12 @@ std::unique_ptr<Mesh> Mesh::createPyramid()
 
     // Create indices
     m->indices = {
-        0, 1, 2,  // front face
-        0, 2, 3,  // right face
-        0, 3, 4,  // back face
-        0, 4, 1,  // left face
-        1, 4, 3,  // base
-        1, 3, 2
+       0, 1, 2,      // front face
+       3, 4, 5,      // right face
+       6, 7, 8,      // back face
+       9, 10, 11,    // left face
+       12, 13, 14,   // base triangle 1
+       12, 14, 15    // base triangle 2
     };
 
     m->uploadToGPU();

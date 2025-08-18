@@ -53,14 +53,14 @@ void Shapes::render(const Shader& shader, glm::mat4 camMatrix)
     model = glm::rotate(model, glm::radians(rotation), glm::vec3(0, 1, 0));
     model = glm::scale(model, scale);
     //for testing purposes
-    shader.use();
+    //shader.use();
     //set uniforms.
     shader.setMat4("uniform_m2w",model);
     shader.setVec4("objectColor", color);
     shader.setMat4("uniform_vp", camMatrix);
     //call draw function.
     main_mesh->draw();
-    shader.unUse();
+    //shader.unUse();
 }
 
 void Shapes::set_color(vec4 color_in)
