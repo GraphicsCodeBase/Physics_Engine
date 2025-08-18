@@ -56,7 +56,7 @@ void Shapes::render(const Shader& shader, glm::mat4 camMatrix)
     shader.use();
     //set uniforms.
     shader.setMat4("uniform_m2w",model);
-    shader.setVec4("uniform_color", color);
+    shader.setVec4("objectColor", color);
     shader.setMat4("uniform_vp", camMatrix);
     //call draw function.
     main_mesh->draw();
