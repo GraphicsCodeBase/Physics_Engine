@@ -5,6 +5,7 @@
 #include "headers/Shader.hpp" 
 #include "headers/Shapes.hpp"
 #include "headers/Camera.hpp"
+#include "headers/MeshLibary.hpp"
 //shader path globals
 std::string shader_VS = "../src/Shaders/main.vert";
 std::string shader_FS = "../src/Shaders/main.frag";
@@ -56,6 +57,9 @@ int main()
     //setup Shaders
     Shader mainShader;
     mainShader.setUpShader(shader_VS,shader_FS);
+    ////setup meshes.
+    MeshLib resource;
+    resource.initalise();
 
     //object creation
     Shapes object_1(
@@ -64,19 +68,19 @@ int main()
         glm::vec3(1.0f, 1.0f, 1.0f),        // scale
         0.0f,                               // rotation in degrees
         glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)); // color RGBA
+
     Shapes object_2(Shapes::shapeType::PYRAMID,            // type
                     glm::vec3(2.0f, 0.0f, 0.0f),        // position
                     glm::vec3(1.0f, 1.0f, 1.0f),        // scale
                     0.0f,                               // rotation in degrees
                     glm::vec4(1.0f, 0.0f, 1.0f, 1.0f)); // color RGBA
+    
     //initialize camera object.
     camera main_camera;
     //get window params.
     // Get actual framebuffer size
     int windowWidth, windowHeight;
     glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
-    // Set OpenGL viewport
-    glViewport(0, 0, windowWidth, windowHeight);
     // After creating window + GL context
     glEnable(GL_DEPTH_TEST);
 
@@ -105,7 +109,7 @@ int main()
         object_2.update(dt);
         //pass in uniforms.
         //passing in global shaders.
-        mainShader.setVec3("lightPos",glm::vec3(1.0f, 0.5f, 0.0f));
+        mainShader.setVec3("lightPos",glm::vec3(1.0f, 2.0f, 0.0f));
         mainShader.setVec3("lightColor", glm::vec3(1.0f));
 
         object_1.render(mainShader, main_camera.getViewProj());

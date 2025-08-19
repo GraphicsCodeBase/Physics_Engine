@@ -15,8 +15,9 @@ void main()
     vec3 L = normalize(lightPos - fragPos); // point light direction
 
     // distance attenuation
+    float lightRadius = 4.0;
     float distance = length(lightPos - fragPos);
-    float attenuation = 1.0 / (distance * distance);
+    float attenuation = clamp(1.0 - distance / lightRadius, 0.0, 1.0);
 
     // ambient lighting
     float ambientStrength = 0.2;

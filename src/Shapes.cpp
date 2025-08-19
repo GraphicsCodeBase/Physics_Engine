@@ -1,7 +1,7 @@
 #pragma once
 #include "headers/Shapes.hpp"
 #include <glm/gtc/matrix_transform.hpp> // For glm::rotate, glm::perspective, glm::lookAt, etc.
-
+#include <string>
 //basic constructor.
 Shapes::Shapes(shapeType type, glm::vec3 pos, glm::vec3 scl, float rot, glm::vec4 col)
     : position(pos), scale(scl), rotation(rot), color(col)
@@ -9,11 +9,11 @@ Shapes::Shapes(shapeType type, glm::vec3 pos, glm::vec3 scl, float rot, glm::vec
     switch (type)
     {
     case shapeType::CUBE:
-        main_mesh = Mesh::createCube();
+        main_mesh = MeshLib::get("cube");
         break;
 
     case shapeType::PYRAMID:
-        main_mesh = Mesh::createPyramid();
+        main_mesh = MeshLib::get("pyramid");
         break;
 
     /*case shapeType::Plane:

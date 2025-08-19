@@ -2,6 +2,7 @@
 #include <glm/glm.hpp>
 #include "headers/Mesh.hpp"
 #include "headers/Shader.hpp"
+#include "headers/MeshLibary.hpp"
 using namespace glm;
 
 class Shapes
@@ -30,5 +31,5 @@ private:
 	glm::vec4 color;
 	glm::mat4 modelMatrix;
 	shapeType objectType;
-	std::unique_ptr<Mesh> main_mesh;
+	std::shared_ptr<Mesh> main_mesh;
 };

@@ -6,10 +6,11 @@ add_library(physics_engine
     headers/Mesh.hpp
     headers/Shader.hpp
     headers/Camera.hpp
+    headers/MeshLibary.hpp
     "Shapes.cpp"
     "Mesh.cpp"
     # add other source files here
- "Shader.cpp" "Camera.cpp")
+ "Shader.cpp" "Camera.cpp" "MeshLibary.cpp")
 
 # External dependencies
 find_package(glm CONFIG REQUIRED)
@@ -33,7 +34,7 @@ target_include_directories(physics_engine
 # Executable that uses the engine
 add_executable(physics_Engine
     main.cpp   # This is the *only* file with int main()
- "Shapes.cpp" "Shader.cpp" "Camera.cpp")
+ "Shapes.cpp" "Shader.cpp" "Camera.cpp" "MeshLibary.cpp")
 
 target_link_libraries(physics_Engine
     PRIVATE physics_engine
