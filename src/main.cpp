@@ -77,6 +77,8 @@ int main()
     glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
     // Set OpenGL viewport
     glViewport(0, 0, windowWidth, windowHeight);
+    // After creating window + GL context
+    glEnable(GL_DEPTH_TEST);
 
     float lastFrame = 0.0f;//initalise last frame time.
     // Main loop
@@ -86,6 +88,8 @@ int main()
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(window, true);
 
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
+
         //calculate delta time
         float currentFrame = static_cast<float>(glfwGetTime());
         float dt = currentFrame - lastFrame;
@@ -93,7 +97,6 @@ int main()
 
         // Render (clear to teal color)
         glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
         //update camera.
         main_camera.update(dt, window, windowWidth, windowHeight);
         //bind Shader
