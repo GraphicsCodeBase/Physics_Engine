@@ -65,7 +65,7 @@ int main()
         0.0f,                               // rotation in degrees
         glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)); // color RGBA
     Shapes object_2(Shapes::shapeType::PYRAMID,            // type
-                    glm::vec3(3.0f, 0.0f, 0.0f),        // position
+                    glm::vec3(2.0f, 0.0f, 0.0f),        // position
                     glm::vec3(1.0f, 1.0f, 1.0f),        // scale
                     0.0f,                               // rotation in degrees
                     glm::vec4(1.0f, 0.0f, 1.0f, 1.0f)); // color RGBA
@@ -105,7 +105,7 @@ int main()
         object_2.update(dt);
         //pass in uniforms.
         //passing in global shaders.
-        mainShader.setVec3("lightDir",glm::vec3(1.0f, 1.0f, 0.0f));
+        mainShader.setVec3("lightPos",glm::vec3(1.0f, 0.5f, 0.0f));
         mainShader.setVec3("lightColor", glm::vec3(1.0f));
 
         object_1.render(mainShader, main_camera.getViewProj());

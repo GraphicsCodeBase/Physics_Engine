@@ -64,88 +64,97 @@ std::unique_ptr<Mesh> Mesh::createCube()
 {
     auto tempMesh = std::make_unique<Mesh>();
 
-    // Create vertices
-    tempMesh->vertices = {
-        // Front face (+Z)
-        {{-0.5f, -0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}},
-        {{ 0.5f, -0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}},
-        {{ 0.5f,  0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}},
-        {{-0.5f,  0.5f,  0.5f}, {0.0f, 0.0f, 1.0f}},
-
-        // Back face (-Z)
-        {{-0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}},
-        {{ 0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}},
-        {{ 0.5f,  0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}},
-        {{-0.5f,  0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}}        
+    // Positions of the 8 cube corners
+    glm::vec3 positions[8] = {
+        {-0.5f, -0.5f,  0.5f}, // 0
+        { 0.5f, -0.5f,  0.5f}, // 1
+        { 0.5f,  0.5f,  0.5f}, // 2
+        {-0.5f,  0.5f,  0.5f}, // 3
+        {-0.5f, -0.5f, -0.5f}, // 4
+        { 0.5f, -0.5f, -0.5f}, // 5
+        { 0.5f,  0.5f, -0.5f}, // 6
+        {-0.5f,  0.5f, -0.5f}  // 7
     };
 
-    // Create indices
+    // Compute smooth normals for each corner by averaging connected face normals
+    glm::vec3 normals[8] = {};
+    normals[0] = normalize(glm::vec3(-1, -1, 1) + glm::vec3(-1, 0, 0) + glm::vec3(0, -1, 0));
+    normals[1] = normalize(glm::vec3(1, -1, 1) + glm::vec3(1, 0, 0) + glm::vec3(0, -1, 0));
+    normals[2] = normalize(glm::vec3(1, 1, 1) + glm::vec3(1, 0, 0) + glm::vec3(0, 1, 0));
+    normals[3] = normalize(glm::vec3(-1, 1, 1) + glm::vec3(-1, 0, 0) + glm::vec3(0, 1, 0));
+    normals[4] = normalize(glm::vec3(-1, -1, -1) + glm::vec3(-1, 0, 0) + glm::vec3(0, -1, 0));
+    normals[5] = normalize(glm::vec3(1, -1, -1) + glm::vec3(1, 0, 0) + glm::vec3(0, -1, 0));
+    normals[6] = normalize(glm::vec3(1, 1, -1) + glm::vec3(1, 0, 0) + glm::vec3(0, 1, 0));
+    normals[7] = normalize(glm::vec3(-1, 1, -1) + glm::vec3(-1, 0, 0) + glm::vec3(0, 1, 0));
+
+    // Create vertices
+    for (int i = 0; i < 8; ++i)
+        tempMesh->vertices.push_back({ positions[i], normals[i] });
+
+    // Indices for the 12 triangles of the cube
     tempMesh->indices = {
-        // Front
-        0, 1, 2, 2, 3, 0,
-        // Right
-        1, 5, 6, 6, 2, 1,
-        // Back
-        5, 4, 7, 7, 6, 5,
-        // Left
-        4, 0, 3, 3, 7, 4,
-        // Top
-        3, 2, 6, 6, 7, 3,
-        // Bottom
-        4, 5, 1, 1, 0, 4
+        0,1,2, 2,3,0, // Front
+        1,5,6, 6,2,1, // Right
+        5,4,7, 7,6,5, // Back
+        4,0,3, 3,7,4, // Left
+        3,2,6, 6,7,3, // Top
+        4,5,1, 1,0,4  // Bottom
     };
 
     tempMesh->uploadToGPU();
 
-    return tempMesh; // returns unique_ptr<Mesh>
+    return tempMesh;
 }
+
 
 
 std::unique_ptr<Mesh> Mesh::createPyramid()
 {
     auto m = std::make_unique<Mesh>();
 
-    // Create vertices
-   // Vertices with normals (per-face)
-    m->vertices = {
-        // Front face
-        {{ 0.0f,  0.5f,  0.0f}, { 0.0f,  0.707f,  0.707f}}, // top
-        {{-0.5f, -0.5f,  0.5f}, { 0.0f,  0.707f,  0.707f}}, // front-left
-        {{ 0.5f, -0.5f,  0.5f}, { 0.0f,  0.707f,  0.707f}}, // front-right
-
-        // Right face
-        {{ 0.0f,  0.5f,  0.0f}, { 0.707f,  0.707f,  0.0f}}, // top
-        {{ 0.5f, -0.5f,  0.5f}, { 0.707f,  0.707f,  0.0f}}, // front-right
-        {{ 0.5f, -0.5f, -0.5f}, { 0.707f,  0.707f,  0.0f}}, // back-right
-
-        // Back face
-        {{ 0.0f,  0.5f,  0.0f}, { 0.0f,  0.707f, -0.707f}}, // top
-        {{ 0.5f, -0.5f, -0.5f}, { 0.0f,  0.707f, -0.707f}}, // back-right
-        {{-0.5f, -0.5f, -0.5f}, { 0.0f,  0.707f, -0.707f}}, // back-left
-
-        // Left face
-        {{ 0.0f,  0.5f,  0.0f}, {-0.707f,  0.707f,  0.0f}}, // top
-        {{-0.5f, -0.5f, -0.5f}, {-0.707f,  0.707f,  0.0f}}, // back-left
-        {{-0.5f, -0.5f,  0.5f}, {-0.707f,  0.707f,  0.0f}}, // front-left
-
-        // Base face (optional: flat horizontal normal)
-        {{-0.5f, -0.5f,  0.5f}, {0.0f, -1.0f, 0.0f}}, // front-left
-        {{ 0.5f, -0.5f,  0.5f}, {0.0f, -1.0f, 0.0f}}, // front-right
-        {{ 0.5f, -0.5f, -0.5f}, {0.0f, -1.0f, 0.0f}}, // back-right
-        {{-0.5f, -0.5f, -0.5f}, {0.0f, -1.0f, 0.0f}}, // back-left
+    // Positions of the 5 pyramid corners
+    glm::vec3 positions[5] = {
+        { 0.0f,  0.5f,  0.0f}, // top (0)
+        {-0.5f, -0.5f,  0.5f}, // front-left (1)
+        { 0.5f, -0.5f,  0.5f}, // front-right (2)
+        { 0.5f, -0.5f, -0.5f}, // back-right (3)
+        {-0.5f, -0.5f, -0.5f}  // back-left (4)
     };
 
-    // Create indices
+    // Compute smooth normals for each vertex
+    glm::vec3 normals[5];
+
+    // Top vertex normal: average of all four side faces
+    normals[0] = normalize(
+        glm::vec3(0.0f, 0.707f, 0.707f) + // front
+        glm::vec3(0.707f, 0.707f, 0.0f) + // right
+        glm::vec3(0.0f, 0.707f, -0.707f) + // back
+        glm::vec3(-0.707f, 0.707f, 0.0f)    // left
+    );
+
+    // Base vertices: average of side faces touching each vertex + bottom face
+    normals[1] = normalize(glm::vec3(0.0f, 0.707f, 0.707f) + glm::vec3(-0.707f, 0.707f, 0.0f) + glm::vec3(0.0f, -1.0f, 0.0f));
+    normals[2] = normalize(glm::vec3(0.0f, 0.707f, 0.707f) + glm::vec3(0.707f, 0.707f, 0.0f) + glm::vec3(0.0f, -1.0f, 0.0f));
+    normals[3] = normalize(glm::vec3(0.0f, 0.707f, -0.707f) + glm::vec3(0.707f, 0.707f, 0.0f) + glm::vec3(0.0f, -1.0f, 0.0f));
+    normals[4] = normalize(glm::vec3(0.0f, 0.707f, -0.707f) + glm::vec3(-0.707f, 0.707f, 0.0f) + glm::vec3(0.0f, -1.0f, 0.0f));
+
+    // Create vertices
+    for (int i = 0; i < 5; ++i)
+        m->vertices.push_back({ positions[i], normals[i] });
+
+    // Indices for the 4 side triangles + 2 base triangles
     m->indices = {
-       0, 1, 2,      // front face
-       3, 4, 5,      // right face
-       6, 7, 8,      // back face
-       9, 10, 11,    // left face
-       12, 13, 14,   // base triangle 1
-       12, 14, 15    // base triangle 2
+        0,1,2, // front
+        0,2,3, // right
+        0,3,4, // back
+        0,4,1, // left
+        1,2,3, // base triangle 1
+        1,3,4  // base triangle 2
     };
 
     m->uploadToGPU();
     return m;
 }
+
+
 

@@ -5,24 +5,29 @@ in vec3 normal;
 
 out vec4 out_color;
 
-uniform vec3 lightDir;     // direction of the light in world space
-uniform vec3 lightColor;   // color light intensity
-uniform vec4 objectColor;  // color of the object (with alpha)
+uniform vec3 lightPos;    // point light position in world space
+uniform vec3 lightColor;  // color/intensity of the light
+uniform vec4 objectColor; // object color
 
 void main()
 {
     vec3 N = normalize(normal);
-    vec3 L = normalize(-lightDir); // directional light points opposite direction
+    vec3 L = normalize(lightPos - fragPos); // point light direction
+
+    // distance attenuation
+    float distance = length(lightPos - fragPos);
+    float attenuation = 1.0 / (distance * distance);
 
     // ambient lighting
     float ambientStrength = 0.2;
     vec3 ambient = ambientStrength * lightColor;
 
-    // diffuse shading 
+    // diffuse shading
     float diff = max(dot(N, L), 0.0);
     vec3 diffuse = diff * lightColor;
 
-    // final color
-    vec3 result = (ambient + diffuse) * objectColor.rgb;
+    // combine and apply attenuation
+    vec3 result = (ambient + diffuse) * attenuation * objectColor.rgb;
+
     out_color = vec4(result, objectColor.a);
 }
