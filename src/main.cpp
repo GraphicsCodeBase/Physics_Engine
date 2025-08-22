@@ -6,6 +6,8 @@
 #include "headers/Shapes.hpp"
 #include "headers/Camera.hpp"
 #include "headers/MeshLibary.hpp"
+#include "headers/physics.hpp"
+#include "headers/Renderer.hpp"
 //shader path globals
 std::string shader_VS = "../src/Shaders/main.vert";
 std::string shader_FS = "../src/Shaders/main.frag";
@@ -24,9 +26,9 @@ int main()
         return -1;
     }
 
-    // Set OpenGL version to 3.3 core profile
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    // Set OpenGL version to 4.6 core profile
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 #ifdef __APPLE__
@@ -53,32 +55,33 @@ int main()
     // Set viewport
     glViewport(0, 0, 800, 600);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    //setup meshes.
+    MeshLib resource;
+    resource.initalise();
+
+    //initalise mesh instances.
+    auto cube = std::make_shared<Shapes>(Shapes::shapeType::CUBE,// type
+        glm::vec3(0.0f, 0.0f, 0.0f),      // pos
+        glm::vec3(1.0f, 1.0f, 1.0f),      // scale
+        0.0f,                             // rot
+        glm::vec4(1, 0, 0, 1)             // color (red)
+    );
 
     //setup Shaders
     Shader mainShader;
     mainShader.setUpShader(shader_VS,shader_FS);
-    ////setup meshes.
-    MeshLib resource;
-    resource.initalise();
-
-    //object creation
-    Shapes object_1(
-        Shapes::shapeType::CUBE,            // type
-        glm::vec3(0.0f, 0.0f, 0.0f),        // position
-        glm::vec3(1.0f, 1.0f, 1.0f),        // scale
-        0.0f,                               // rotation in degrees
-        glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)); // color RGBA
-
-    Shapes object_2(Shapes::shapeType::PYRAMID,            // type
-                    glm::vec3(2.0f, 0.0f, 0.0f),        // position
-                    glm::vec3(1.0f, 1.0f, 1.0f),        // scale
-                    0.0f,                               // rotation in degrees
-                    glm::vec4(1.0f, 0.0f, 1.0f, 1.0f)); // color RGBA
-    
+    //make a physics system
+    PhysicsSystem physics_system;
+    physics_system.initaliseObjects();
+    //make renderer system
+    Renderer render_system;
+    render_system.initInstanceBuffer(cube->getMesh(),100);
     //initialize camera object.
     camera main_camera;
     //get window params.
     // Get actual framebuffer size
+
+
     int windowWidth, windowHeight;
     glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
     // After creating window + GL context
@@ -105,15 +108,19 @@ int main()
         main_camera.update(dt, window, windowWidth, windowHeight);
         //bind Shader
         mainShader.use();
-        object_1.update(dt);
-        object_2.update(dt);
-        //pass in uniforms.
+
+        //update the objects 
+        physics_system.update(dt);
+
+        //pass into the renderer to be rendered 
+        render_system.updateInstanceData(cube->getMesh(),physics_system.getObjects());
+
         //passing in global shaders.
         mainShader.setVec3("lightPos",glm::vec3(1.0f, 2.0f, 0.0f));
         mainShader.setVec3("lightColor", glm::vec3(1.0f));
+        mainShader.setVec4("objectColor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
-        object_1.render(mainShader, main_camera.getViewProj());
-        object_2.render(mainShader, main_camera.getViewProj());
+        render_system.drawInstanced(cube->getMesh(), physics_system.getObjects().size());
         //unbind shaders.
         mainShader.unUse();
         // Swap buffers + poll events

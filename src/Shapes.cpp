@@ -43,6 +43,13 @@ void Shapes::update(float dt)
     // Keep rotation within 0–360° (optional)
     if (rotation >= 360.0f)
         rotation -= 360.0f;
+
+    glm::mat4 model = glm::mat4(1.0f);//start with a identity matrix
+    model = glm::translate(model, position);
+    model = glm::rotate(model, glm::radians(rotation), glm::vec3(0, 1, 0));
+    model = glm::scale(model, scale);
+
+    modelMatrix = model;//assign the matrix into the mem var.
 }
 
 void Shapes::render(const Shader& shader, glm::mat4 camMatrix)
@@ -66,4 +73,29 @@ void Shapes::render(const Shader& shader, glm::mat4 camMatrix)
 void Shapes::set_color(vec4 color_in)
 {
 	color = color_in;
+}
+
+void Shapes::setRot(float rotation_in)
+{
+    rotation = rotation_in;
+}
+
+void Shapes::setPos(glm::vec3 position_in)
+{
+    position = position_in;
+}
+
+std::shared_ptr<Mesh> Shapes::getMesh()
+{
+    return main_mesh;
+}
+
+glm::mat4 Shapes::getModelMatrix()
+{
+    return modelMatrix;
+}
+
+float Shapes::getRot()
+{
+    return rotation;
 }

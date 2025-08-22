@@ -20,9 +20,15 @@ public:
 	~Shapes();//destructor
 	void update(float dt); //dt = delta time.
 	void render(const Shader& shader, glm::mat4 camMatrix);
-	//void initalise_shape();
+	//void initialize_shape();
 	void set_color(vec4 color);
-
+	//setters
+	void setRot(float rotation_in);
+	void setPos(glm::vec3 position_in);
+	//Getters
+	std::shared_ptr<Mesh> getMesh();
+	glm::mat4 getModelMatrix();
+	float getRot();
 private:
 	//basic attributes to send to the GPU.
 	glm::vec3 position;
