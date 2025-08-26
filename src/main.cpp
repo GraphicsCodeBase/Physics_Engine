@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <iostream>
+#include <string>
 #include "headers/Shader.hpp" 
 #include "headers/Shapes.hpp"
 #include "headers/Camera.hpp"
@@ -78,7 +79,7 @@ int main()
     physics_system.initaliseObjects();
     //make renderer system
     Renderer render_system;
-    render_system.initInstanceBuffer(cube->getMesh(),100);
+    render_system.initInstanceBuffer(cube->getMesh(),1000);
     //initialize camera object.
     camera main_camera;
     //get window params.
@@ -91,6 +92,11 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
     float lastFrame = 0.0f;//initalise last frame time.
+    //for FPS purporses
+    // add these outside the loop
+    double lastTime = glfwGetTime();
+    int nbFrames = 0;
+
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
@@ -104,6 +110,18 @@ int main()
         float currentFrame = static_cast<float>(glfwGetTime());
         float dt = currentFrame - lastFrame;
         lastFrame = currentFrame;
+
+        // --- FPS counter ---
+        nbFrames++;
+        if (currentFrame - lastTime >= 1.0) { // update every 1 second
+            float fps = nbFrames / (currentFrame - lastTime);
+
+            std::string title = "My Engine - FPS: " + std::to_string((int)fps);
+            glfwSetWindowTitle(window, title.c_str());
+
+            nbFrames = 0;
+            lastTime = currentFrame;
+        }
 
         // Render (clear to teal color)
         glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
@@ -120,7 +138,7 @@ int main()
 
         //passing in global shaders.
         mainShader.setMat4("uniform_vp", main_camera.getViewProj());
-        mainShader.setVec3("lightPos",glm::vec3(3.0f, 2.0f, 2.0f));
+        mainShader.setVec3("lightPos",glm::vec3(3.0f, 20.0f, 2.0f));
         mainShader.setVec3("lightColor", glm::vec3(1.0f));
         mainShader.setVec4("objectColor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 

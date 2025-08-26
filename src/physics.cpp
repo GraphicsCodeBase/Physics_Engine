@@ -3,26 +3,38 @@
 
 void PhysicsSystem::initaliseObjects()
 {
-	objects.clear();
-	//make 16 cubes and put into the container.
-	// all the same color first.
-	int gridSize = 4;        // 4x4 grid
-	float spacing = 1.5f;    // distance between cubes
+    objects.clear();
 
-	for (int x = 0; x < gridSize; x++)
-	{
-		for (int z = 0; z < gridSize; z++)
-		{
-			glm::vec3 pos = glm::vec3(x * spacing, 0.0f, z * spacing);
-			glm::vec3 scale = glm::vec3(1.0f);
-			float rot = 0.0f;
-			glm::vec4 color = glm::vec4(1.0f, 0.5f, 0.2f, 1.0f);
+    int gridSize = 10;       // 10x10x10 = 1000 cubes
+    float spacing = 2.0f;    // distance between cubes
 
-			auto cube = std::make_shared<Shapes>(Shapes::shapeType::CUBE, pos, scale, rot, color);
-			objects.push_back(cube);
-		}
-	}
+    for (int x = 0; x < gridSize; x++)
+    {
+        for (int y = 0; y < gridSize; y++)
+        {
+            for (int z = 0; z < gridSize; z++)
+            {
+                glm::vec3 pos = glm::vec3(
+                    x * spacing,
+                    y * spacing,
+                    z * spacing
+                );
+
+                glm::vec3 scale = glm::vec3(1.0f);
+                float rot = 0.0f;
+                glm::vec4 color = glm::vec4(1.0f, 0.5f, 0.2f, 1.0f);
+
+                auto cube = std::make_shared<Shapes>(
+                    Shapes::shapeType::CUBE,
+                    pos, scale, rot, color
+                );
+
+                objects.push_back(cube);
+            }
+        }
+    }
 }
+
 
 void PhysicsSystem::update(float dt)
 {
