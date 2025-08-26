@@ -11,6 +11,8 @@
 //shader path globals
 std::string shader_VS = "../src/Shaders/main.vert";
 std::string shader_FS = "../src/Shaders/main.frag";
+std::string Test_shader_VS = "../src/Shaders/test.vert";
+std::string Test_shader_FS = "../src/Shaders/test.frag";
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -70,6 +72,7 @@ int main()
     //setup Shaders
     Shader mainShader;
     mainShader.setUpShader(shader_VS,shader_FS);
+    //mainShader.setUpShader(Test_shader_VS,Test_shader_FS);
     //make a physics system
     PhysicsSystem physics_system;
     physics_system.initaliseObjects();
@@ -116,7 +119,8 @@ int main()
         render_system.updateInstanceData(cube->getMesh(),physics_system.getObjects());
 
         //passing in global shaders.
-        mainShader.setVec3("lightPos",glm::vec3(1.0f, 2.0f, 0.0f));
+        mainShader.setMat4("uniform_vp", main_camera.getViewProj());
+        mainShader.setVec3("lightPos",glm::vec3(3.0f, 2.0f, 2.0f));
         mainShader.setVec3("lightColor", glm::vec3(1.0f));
         mainShader.setVec4("objectColor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
