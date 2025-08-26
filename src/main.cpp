@@ -137,10 +137,10 @@ int main()
         render_system.updateInstanceData(cube->getMesh(),physics_system.getObjects());
 
         //passing in global shaders.
-        mainShader.setMat4("uniform_vp", main_camera.getViewProj());
+        mainShader.setMat4("uniform_vp", main_camera.getViewProj());//pass in camera as a uniform.
         mainShader.setVec3("lightPos",glm::vec3(3.0f, 20.0f, 2.0f));
         mainShader.setVec3("lightColor", glm::vec3(1.0f));
-        mainShader.setVec4("objectColor", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+        mainShader.setVec4("objectColor", glm::vec4(1.0f, 0.0f, 0.86f, 1.0f));
 
         render_system.drawInstanced(cube->getMesh(), physics_system.getObjects().size());
         //unbind shaders.
